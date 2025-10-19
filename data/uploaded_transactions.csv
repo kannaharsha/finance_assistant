@@ -1,0 +1,17 @@
+Date,Description,Amount,Type,Category
+2025-10-01,Salary,50000,Income,Income
+2025-10-02,Amazon Purchase,1200,Expense,Shopping
+2025-10-03,Uber Ride,350,Expense,Transport
+2025-10-04,Rent Payment,15000,Expense,Housing
+2025-10-05,Netflix Subscription,999,Expense,Entertainment
+2025-10-06,Flipkart Shopping,2200,Expense,Shopping
+2025-10-07,Ola Ride,400,Expense,Transport
+2025-10-08,Groceries at Big Bazaar,3500,Expense,Others
+2025-10-09,Electricity Bill,1800,Expense,Others
+2025-10-10,Water Bill,500,Expense,Others
+2025-10-11,Salary Bonus,10000,Income,Income
+2025-10-12,Netflix Subscription,999,Expense,Entertainment
+2025-10-13,Amazon Purchase,1500,Expense,Shopping
+2025-10-14,Movie Tickets,800,Expense,Entertainment
+2025-10-15,Uber Ride,300,Expense,Transport
+2025-10-16,Salary,50000,Income,Income

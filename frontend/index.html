@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personal Finance Dashboard</title>
+    <!-- Google Fonts for Professional Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS for Framework -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons for Visual Enhancements -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js for Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS for Professional Styling -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            color: #495057;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            margin: 0;
+            padding: 40px 20px;
+            max-width: 100%;
+        }
+
+        /* Header Styling */
+        .header-bg {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border-radius: 0;
+            padding: 50px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .header-bg h1 {
+            font-weight: 700;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .header-bg p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Card Styling */
+        .card-custom {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+        .card-custom:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Button Styling */
+        .btn-custom {
+            background: #007bff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        .btn-custom:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+        }
+
+        /* Table Styling */
+        .table-custom th {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px;
+            text-transform: uppercase;
+        }
+        .table-custom td {
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Pagination Styling */
+        .pagination-custom .page-link {
+            color: #007bff;
+            border-radius: 6px;
+            margin: 0 4px;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+        .pagination-custom .page-link:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination-custom .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Alert Styles for Budget */
+        .alert-over {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 8px;
+        }
+        .alert-near {
+            background-color: #fff3cd;
+            color: #856404;
+            border-radius: 8px;
+        }
+
+        /* Savings Color Coding */
+        .savings-low {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .savings-medium {
+            color: #ffc107;
+            font-weight: 600;
+        }
+        .savings-high {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        /* Form Controls */
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 8px 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+
+        /* List Group for Advice */
+        .list-group-item {
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Icon Styling */
+        .icon-btn {
+            margin-right: 8px;
+        }
+
+        /* Progress Bar for Goals */
+        .progress-custom {
+            height: 20px;
+            border-radius: 10px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px 10px;
+            }
+            .header-bg h1 {
+                font-size: 2rem;
+            }
+            .chart-container {
+                max-width: 100%;
+                padding: 15px;
+            }
+            .btn-custom {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Animation for Loading */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .card-custom {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <header class="header-bg">
+            <h1><i class="bi bi-graph-up-arrow icon-btn"></i>Financio</h1>
+            <p>Your AI-Powered Personal Finance Dashboard</p>
+        </header>
+
+        <div class="main-container">
+            <!-- Upload Section -->
+            <div class="card card-custom p-4 mb-4">
+                <h2 class="section-title text-center"><i class="bi bi-cloud-upload icon-btn"></i>Upload Transaction File (CSV)</h2>
+                <div class="text-center">
+                    <input type="file" id="csvFile" class="form-control d-inline-block w-50 mb-3">
+                    <br>
+                    <button class="btn btn-custom" onclick="uploadCSV()"><i class="bi bi-upload icon-btn"></i>Upload</button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4" id="summaryCards">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card card-custom text-center p-4">
+                        <div class="card-body">
+                            <i class="bi bi-cash-coin text-success fs-1 mb-3"></i>
+                            <h3 class="h5 text-success mb-2">Income</h3>
+                            <p class="h4 fw-bold" id="incomeVal">--</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card card-custom text-center p-4">
+                        <div class="card-body">
+                            <i class="bi bi-receipt text-danger fs-1 mb-3"></i>
+                            <h3 class="h5 text-danger mb-2">Expenses</h3>
+                            <p class="h4 fw-bold" id="expenseVal">--</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="card card-custom text-center p-4">
+                        <div class="card-body">
+                            <i class="bi bi-piggy-bank text-primary fs-1 mb-3"></i>
+                            <h3 class="h5 text-primary mb-2">Savings %</h3>
+                            <p class="h4 fw-bold" id="savingsVal">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div class="card card-custom p-4 mb-4">
+                <h2 class="section-title"><i class="bi bi-list-ul icon-btn"></i>Categorized Transactions</h2>
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <input type="text" id="searchBox" class="form-control w-50 mb-2" placeholder="Search transactions..." onkeyup="filterTable()">
+                    <button class="btn btn-custom" onclick="downloadTransactionsCSV()"><i class="bi bi-download icon-btn"></i>Download CSV</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-custom" id="transactionTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <nav aria-label="Transaction pagination">
+                    <ul class="pagination pagination-custom justify-content-center mt-4">
+                        <li class="page-item" id="prevBtn">
+                            <button class="page-link" onclick="changePage(-1)"><i class="bi bi-chevron-left"></i> Previous</button>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link" id="pageInfo"></span>
+                        </li>
+                        <li class="page-item" id="nextBtn">
+                            <button class="page-link" onclick="changePage(1)">Next <i class="bi bi-chevron-right"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Budget Section -->
+            <div class="card card-custom p-4 mb-4">
+                <h2 class="section-title"><i class="bi bi-wallet icon-btn"></i>Budget Summary</h2>
+                <div class="table-responsive">
+                    <table class="table table-custom" id="budgetTable">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Spent</th>
+                                <th>Budget</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-link toggle-btn p-0 mt-3" onclick="toggleBudget()">View All <i class="bi bi-chevron-down"></i></button>
+            </div>
+
+        <!-- Monthly Trends Section -->
+        <div class="card card-custom p-4 mb-4">
+        <h2 class="section-title"><i class="bi bi-graph-up icon-btn"></i>Monthly Trends</h2>
+        <button class="btn btn-custom mb-3" onclick="downloadTrends()"><i class="bi bi-download icon-btn"></i>Download Trends</button>
+        <div class="chart-container" style="width: 100%; height: 400px;"    >
+            <canvas id="trendsChart"></canvas>
+            <p id="trendsMessage" class="text-center text-muted">Upload data to view monthly trends.</p>
+        </div>
+        </div>
+
+        <!-- Financial Goals Section -->
+        <div class="card card-custom p-4 mb-4">
+        <h2 class="section-title"><i class="bi bi-trophy icon-btn"></i>Financial Goals</h2>
+        <button class="btn btn-custom mb-3" onclick="downloadGoals()"><i class="bi bi-download icon-btn"></i>Download Goals</button>
+        <div id="goalsContainer">
+            <p class="text-center text-muted">No financial goals data available yet. Upload data to view goals.</p>
+        </div>
+        </div>
+
+            <!-- Advice Section -->
+            <div class="card card-custom p-4 mb-4">
+                <h2 class="section-title"><i class="bi bi-lightbulb icon-btn"></i>Financial Advice</h2>
+                <button class="btn btn-custom mb-3" onclick="downloadAdvice()"><i class="bi bi-download icon-btn"></i>Download Advice</button>
+                <ul class="list-group list-group-flush" id="advice"></ul>
+            </div>
+            <!-- Bill Reminders Section -->
+<div class="card card-custom p-4 mb-4">
+    <h2 class="section-title"><i class="bi bi-alarm icon-btn"></i>Bill Reminders</h2>
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <input type="text" id="billName" class="form-control" placeholder="Bill Name (e.g. Rent)">
+        </div>
+        <div class="col-md-3">
+            <input type="number" id="billAmount" class="form-control" placeholder="Amount">
+        </div>
+        <div class="col-md-3">
+            <input type="date" id="billDueDate" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-custom w-100" onclick="addBillReminder()"><i class="bi bi-plus-circle"></i> Add</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-custom" id="billTable">
+            <thead>
+                <tr>
+                    <th>Bill Name</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <button class="btn btn-custom mt-3" onclick="downloadBillReminders()"><i class="bi bi-download icon-btn"></i>Download Reminders</button>
+</div>
+
+<!-- Investment Tracking Section -->
+<div class="card card-custom p-4 mb-4">
+    <h2 class="section-title"><i class="bi bi-currency-exchange icon-btn"></i>Investment Tracking</h2>
+    <div class="row g-3 mb-3">
+        <div class="col-md-3"><input type="text" id="investName" class="form-control" placeholder="Investment Name"></div>
+        <div class="col-md-2"><input type="number" id="investAmount" class="form-control" placeholder="Amount"></div>
+        <div class="col-md-2"><input type="number" id="currentValue" class="form-control" placeholder="Current Value"></div>
+        <div class="col-md-3"><input type="date" id="investDate" class="form-control"></div>
+        <div class="col-md-2"><button class="btn btn-custom w-100" onclick="addInvestment()"><i class="bi bi-plus-circle"></i> Add</button></div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-custom" id="investTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Current Value</th>
+                    <th>Growth %</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <button class="btn btn-custom mt-3" onclick="downloadInvestments()"><i class="bi bi-download icon-btn"></i>Download Investments</button>
+</div>
+
+<!-- Receipt Tracking Section -->
+<div class="card card-custom p-4 mb-4">
+    <h2 class="section-title"><i class="bi bi-receipt-cutoff icon-btn"></i>Receipt Tracking</h2>
+    <div class="text-center mb-3">
+        <input type="file" id="receiptUpload" accept="image/*" class="form-control d-inline-block w-50 mb-2">
+        <button class="btn btn-custom" onclick="uploadReceipt()"><i class="bi bi-upload icon-btn"></i>Upload Receipt</button>
+    </div>
+    <div id="receiptGallery" class="row g-3"></div>
+</div>
+
+            <!-- Insights Section -->
+            <div class="card card-custom p-4 mb-4">
+                <h2 class="section-title"><i class="bi bi-bar-chart-line icon-btn"></i>Top Expenses & Category %</h2>
+                <input type="text" id="searchTopExpenses" class="form-control w-50 mb-3" placeholder="Search top expenses..." onkeyup="filterTopExpenses()">
+                <button class="btn btn-custom mb-3" onclick="downloadAllInsights()"><i class="bi bi-download icon-btn"></i>Download All Insights</button>
+                <div class="table-responsive">
+                    <table class="table table-custom" id="topExpensesTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="categoryPercentages" class="mt-4">
+                    <h3 class="h5 section-title">Category Percentages</h3>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card card-custom p-4">
+                <h2 class="section-title text-center"><i class="bi bi-pie-chart icon-btn"></i>Expense Distribution</h2>
+                <button class="btn btn-custom mb-3" onclick="downloadChart()"><i class="bi bi-download icon-btn"></i>Download Chart</button>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let allTransactions = [], currentPage = 1, rowsPerPage = 10, budgetData = {}, showAllBudget = false;
+
+        async function uploadCSV() {
+            const fileInput = document.getElementById('csvFile');
+            if (!fileInput.files[0]) return alert("Select a CSV file.");
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const res = await fetch('http://127.0.0.1:5000/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (res.ok) {
+                allTransactions = data.transactions;
+                displayPage();
+                fetchAdvice();
+            } else alert(data.error);
+        }
+
+async function fetchAdvice() {
+    try {
+        const res = await fetch('http://127.0.0.1:5000/recommend');
+        const data = await res.json();
+
+        console.log('Fetched data:', data); // Add this to check what data is received
+
+        displayAdvice(data.advice);
+        displayChart(data.category_totals);
+        displayBudget(data.budget_info);
+        updateSummary(data.monthly_summary);
+        displayTopExpenses(data.top_expenses);
+        displayCategoryPercentages(data.category_pct);
+        
+        // Ensure these are called
+        displayMonthlyTrends(data.monthly_trends);
+        displayGoals(data.goals_status);
+
+    } catch (err) {
+        alert("Error fetching advice: " + err.message);
+        console.error('Fetch error:', err); // Add this for debugging
+    }
+}
+
+let bills = [], investments = [], receipts = [];
+
+// ---------- BILL REMINDERS ----------
+function addBillReminder() {
+    const name = document.getElementById("billName").value.trim();
+    const amount = document.getElementById("billAmount").value.trim();
+    const dueDate = document.getElementById("billDueDate").value;
+
+    if (!name || !amount || !dueDate) return alert("Please fill all bill fields.");
+
+    const status = getBillStatus(dueDate);
+    bills.push({ name, amount, dueDate, status });
+    renderBills();
+    document.getElementById("billName").value = "";
+    document.getElementById("billAmount").value = "";
+    document.getElementById("billDueDate").value = "";
+}
+
+function getBillStatus(date) {
+    const today = new Date();
+    const due = new Date(date);
+    const diff = (due - today) / (1000 * 3600 * 24);
+
+    if (diff < 0) return "Overdue";
+    if (diff <= 3) return "Due Soon";
+    return "Upcoming";
+}
+
+function renderBills() {
+    const tbody = document.querySelector("#billTable tbody");
+    tbody.innerHTML = "";
+    bills.forEach(b => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${b.name}</td><td>$${b.amount}</td><td>${b.dueDate}</td><td>${b.status}</td>`;
+        if (b.status === "Overdue") row.style.backgroundColor = "#f8d7da";
+        else if (b.status === "Due Soon") row.style.backgroundColor = "#fff3cd";
+        tbody.appendChild(row);
+    });
+}
+
+function downloadBillReminders() {
+    if (bills.length === 0) return alert("No bill reminders to download.");
+    const content = bills.map(b => `${b.name}, ${b.amount}, ${b.dueDate}, ${b.status}`).join("\n");
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "bill_reminders.txt";
+    a.click();
+}
+
+// ---------- INVESTMENT TRACKING ----------
+function addInvestment() {
+    const name = document.getElementById("investName").value.trim();
+    const amount = parseFloat(document.getElementById("investAmount").value);
+    const currentValue = parseFloat(document.getElementById("currentValue").value);
+    const date = document.getElementById("investDate").value;
+
+    if (!name || isNaN(amount) || isNaN(currentValue) || !date)
+        return alert("Please fill all investment fields.");
+
+    const growth = ((currentValue - amount) / amount) * 100;
+    investments.push({ name, amount, currentValue, growth: growth.toFixed(2), date });
+    renderInvestments();
+
+    document.getElementById("investName").value = "";
+    document.getElementById("investAmount").value = "";
+    document.getElementById("currentValue").value = "";
+    document.getElementById("investDate").value = "";
+}
+
+function renderInvestments() {
+    const tbody = document.querySelector("#investTable tbody");
+    tbody.innerHTML = "";
+    investments.forEach(inv => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${inv.name}</td>
+            <td>$${inv.amount}</td>
+            <td>$${inv.currentValue}</td>
+            <td>${inv.growth}%</td>
+            <td>${inv.date}</td>`;
+        row.style.color = inv.growth >= 0 ? "#28a745" : "#dc3545";
+        tbody.appendChild(row);
+    });
+}
+
+function downloadInvestments() {
+    if (investments.length === 0) return alert("No investment data to download.");
+    const content = investments.map(inv => `${inv.name}, ${inv.amount}, ${inv.currentValue}, ${inv.growth}%, ${inv.date}`).join("\n");
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "investments.txt";
+    a.click();
+}
+
+// ---------- RECEIPT TRACKING ----------
+function uploadReceipt() {
+    const fileInput = document.getElementById("receiptUpload");
+    const file = fileInput.files[0];
+    if (!file) return alert("Please select a receipt image.");
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        receipts.push(e.target.result);
+        renderReceipts();
+    };
+    reader.readAsDataURL(file);
+    fileInput.value = "";
+}
+
+function renderReceipts() {
+    const gallery = document.getElementById("receiptGallery");
+    gallery.innerHTML = "";
+    receipts.forEach((src, idx) => {
+        const col = document.createElement("div");
+        col.className = "col-md-3 text-center";
+        col.innerHTML = `
+            <div class="card card-custom p-2">
+                <img src="${src}" alt="Receipt ${idx + 1}" class="img-fluid rounded mb-2" style="max-height:150px; object-fit:cover;">
+                <button class="btn btn-outline-danger btn-sm" onclick="removeReceipt(${idx})"><i class="bi bi-trash"></i> Remove</button>
+            </div>`;
+        gallery.appendChild(col);
+    });
+}
+
+function removeReceipt(index) {
+    receipts.splice(index, 1);
+    renderReceipts();
+}
+
+        function displayAdvice(adviceText) {
+            const adviceList = document.getElementById("advice");
+            adviceList.innerHTML = "";
+            if (!adviceText || adviceText.trim() === "") {
+                adviceList.innerHTML = "<li class='list-group-item'>No advice available yet.</li>";
+                return;
+            }
+            adviceText.split("\n").forEach(line => {
+                if (line.trim()) {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item";
+                    li.innerHTML = `<i class="bi bi-check-circle text-success me-2"></i>${line}`;
+                    adviceList.appendChild(li);
+                }
+            });
+        }
+
+
+        function displayPage() {
+            const tbody = document.querySelector("#transactionTable tbody");
+            tbody.innerHTML = "";
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = allTransactions.slice(start, end);
+            pageData.forEach(t => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>${t.Date || ''}</td><td>${t.Description || ''}</td><td>${t.Amount}</td><td>${t.Type}</td><td>${t.Category || ''}</td>`;
+                tbody.appendChild(row);
+            });
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${Math.ceil(allTransactions.length / rowsPerPage)}`;
+            document.getElementById('prevBtn').classList.toggle('disabled', currentPage === 1);
+            document.getElementById('nextBtn').classList.toggle('disabled', end >= allTransactions.length);
+        }
+
+        function changePage(dir) { currentPage += dir; displayPage(); }
+
+function downloadAllInsights() {
+    const summary = [
+        'Income: ' + document.getElementById('incomeVal').innerText,
+        'Expenses: ' + document.getElementById('expenseVal').innerText,
+        'Savings %: ' + document.getElementById('savingsVal').innerText
+    ];
+    const advice = Array.from(document.getElementById('advice').children).map(li => li.textContent);
+    const topExpenses = Array.from(document.querySelectorAll('#topExpensesTable tbody tr')).map(tr =>
+        Array.from(tr.children).map(td => td.textContent).join(',')
+    );
+    const content = summary.join('\n') + '\n\nAdvice:\n' + advice.join('\n') + '\n\nTop Expenses:\n' + topExpenses.join('\n');
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'full_dashboard_insights.txt';
+    a.click();
+}
+
+function filterTable(){
+    const query=document.getElementById('searchBox').value.toLowerCase();
+    const filtered=allTransactions.filter(t=>
+        (t.Description||'').toLowerCase().includes(query)||
+        (t.Category||'').toLowerCase().includes(query)||
+        (t.Type||'').toLowerCase().includes(query)
+    );
+    const tbody=document.querySelector("#transactionTable tbody");
+    tbody.innerHTML="";
+    filtered.slice(0, rowsPerPage).forEach(t=>{
+        const row=document.createElement("tr");
+        row.innerHTML=`<td>${t.Date||''}</td><td>${t.Description||''}</td><td>${t.Amount}</td><td>${t.Type}</td><td>${t.Category||''}</td>`;
+        tbody.appendChild(row);
+    });
+    document.getElementById('pageInfo').textContent=`Filtered ${filtered.length} results`;
+}
+
+function displayBudget(budgetInfo){ budgetData=budgetInfo; renderBudget(); }
+
+function renderBudget(){
+    const tbody=document.querySelector("#budgetTable tbody");
+    tbody.innerHTML="";
+    const entries=Object.entries(budgetData);
+    const toShow=showAllBudget ? entries : entries.slice(0,5);
+    toShow.forEach(([cat,val])=>{
+        const row=document.createElement("tr");
+        row.innerHTML=`<td>${cat}</td><td>${val.spent}</td><td>${val.budget}</td><td>${val.status}</td>`;
+        if(val.status === "Over budget!") row.style.backgroundColor = "#FFCDD2"; 
+        else if(val.status === "Near budget limit") row.style.backgroundColor = "#FFF9C4";
+        tbody.appendChild(row);
+    });
+
+}
+
+function toggleBudget(){ showAllBudget=!showAllBudget; renderBudget(); document.querySelector(".toggle-btn").textContent=showAllBudget?"Show Less":"View All"; }
+
+function displayChart(categoryTotals){
+    const ctx=document.getElementById('expenseChart').getContext('2d');
+    if(window.expenseChartInstance) window.expenseChartInstance.destroy();
+    window.expenseChartInstance=new Chart(ctx,{
+        type:'doughnut',
+        data:{labels:Object.keys(categoryTotals), datasets:[{data:Object.values(categoryTotals), backgroundColor:['#4CAF50','#FF9800','#F44336','#2196F3','#9C27B0','#FFC107']}]},
+        options:{responsive:true, plugins:{legend:{position:'bottom'}}}
+    });
+}
+function filterTopExpenses() {
+    const query = document.getElementById('searchTopExpenses').value.toLowerCase();
+    const tbody = document.querySelector("#topExpensesTable tbody");
+    const rows = tbody.getElementsByTagName("tr");
+    for (let i = 0; i < rows.length; i++) {
+        const desc = rows[i].cells[1].textContent.toLowerCase();
+        const cat = rows[i].cells[3].textContent.toLowerCase();
+        rows[i].style.display = (desc.includes(query) || cat.includes(query)) ? "" : "none";
+    }
+}
+
+function updateSummary(summary){
+    document.getElementById('incomeVal').textContent=summary.income.toFixed(2);
+    document.getElementById('expenseVal').textContent=summary.expenses.toFixed(2);
+    document.getElementById('savingsVal').textContent=summary.savings_pct.toFixed(1)+"%";
+    if(summary.savings_pct < 10) document.getElementById('savingsVal').style.color = 'red';
+    else if(summary.savings_pct < 30) document.getElementById('savingsVal').style.color = 'orange';
+    else document.getElementById('savingsVal').style.color = 'green';
+
+}
+
+function downloadTransactionsCSV(){
+    if(allTransactions.length===0) return alert("No transactions to export.");
+    const query=document.getElementById('searchBox').value.toLowerCase();
+    let filtered=allTransactions;
+    if(query){
+        filtered=allTransactions.filter(t=>(t.Description||'').toLowerCase().includes(query)||(t.Category||'').toLowerCase().includes(query)||(t.Type||'').toLowerCase().includes(query));
+    }
+    const headers=["Date","Description","Amount","Type","Category"];
+    const csvRows=[headers.join(",")];
+    filtered.forEach(t=>{ csvRows.push([t.Date,t.Description,t.Amount,t.Type,t.Category].join(",")); });
+    const blob=new Blob([csvRows.join("\n")],{type:'text/csv'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download="transactions_export.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function downloadAdvice(){
+    const adviceText=document.getElementById("advice").innerText;
+    if(!adviceText) return alert("No advice to download.");
+    const blob=new Blob([adviceText],{type:'text/plain'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download="financial_advice.txt"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function downloadChart(){
+    if(!window.expenseChartInstance) return alert("No chart to download.");
+    const link=document.createElement("a");
+    link.href=window.expenseChartInstance.toBase64Image();
+    link.download="expense_chart.png";
+    link.click();
+}
+
+function displayTopExpenses(topList){
+    const tbody=document.querySelector("#topExpensesTable tbody");
+    tbody.innerHTML="";
+    topList.forEach(t=>{
+        const row=document.createElement("tr");
+        row.innerHTML=`<td>${t.Date}</td><td>${t.Description}</td><td>${t.Amount}</td><td>${t.Category}</td>`;
+        tbody.appendChild(row);
+    });
+}
+
+function displayCategoryPercentages(categoryPct){
+    const container=document.getElementById("categoryPercentages");
+    container.innerHTML="<h3>Category Percentages</h3>";
+    for(const cat in categoryPct){
+        container.innerHTML+=`<p>${cat}: ${categoryPct[cat]}%</p>`;
+    }
+}
+function updateSummary(summary){
+    document.getElementById('incomeVal').textContent = summary.income.toFixed(2);
+    document.getElementById('expenseVal').textContent = summary.expenses.toFixed(2);
+    document.getElementById('savingsVal').textContent = summary.savings_pct.toFixed(1) + "%";
+}
+function displayFinancialInsights(insights){
+    const container = document.getElementById('financialInsights');
+    container.innerHTML = "";
+    insights.forEach(ins => {
+        const li = document.createElement("li");
+        li.textContent = ins;
+        container.appendChild(li);
+    });
+}
+
+function downloadFinancialInsights(){
+    const insights = Array.from(document.getElementById('financialInsights').children)
+                        .map(li => li.textContent);
+    if(insights.length===0) return alert("No insights to download.");
+    const blob = new Blob([insights.join('\n')], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'financial_insights.txt';
+    a.click();
+}
+function displayMonthlyTrends(monthlyData) {
+    const messageEl = document.getElementById('trendsMessage');
+    if (!monthlyData || Object.keys(monthlyData).length === 0) {
+        messageEl.style.display = 'block';
+        return;
+    }
+    messageEl.style.display = 'none';
+
+    const ctx = document.getElementById('trendsChart').getContext('2d');
+    if (window.trendsChartInstance) window.trendsChartInstance.destroy();
+
+    const months = Object.keys(monthlyData);
+    const income = months.map(m => monthlyData[m].income || 0);
+    const expenses = months.map(m => monthlyData[m].expenses || 0);
+    const savings = months.map(m => monthlyData[m].savings || 0);
+
+    window.trendsChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [
+                { label: 'Income', data: income, backgroundColor: '#4CAF50' },
+                { label: 'Expenses', data: expenses, backgroundColor: '#F44336' },
+                { label: 'Savings', data: savings, backgroundColor: '#2196F3' }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: { mode: 'index', intersect: false }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+function displayGoals(goalsData) {
+    const container = document.getElementById("goalsContainer");
+    container.innerHTML = "";
+
+    if (!goalsData || Object.keys(goalsData).length === 0) {
+        container.innerHTML = "<p class='text-center text-muted'>No financial goals data available yet. Upload data to view goals.</p>";
+        return;
+    }
+
+    Object.entries(goalsData).forEach(([goalName, goalInfo]) => {
+        const goalDiv = document.createElement("div");
+        goalDiv.classList.add("goal-item", "mb-3");
+
+        const progress = Math.min(100, Math.round((goalInfo.current / goalInfo.target) * 100));
+
+        goalDiv.innerHTML = `
+            <h5>${goalName} - ${progress}%</h5>
+            <div class="progress mb-2">
+                <div class="progress-bar" role="progressbar" style="width: ${progress}%" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <small class="text-muted">Current: $${goalInfo.current} / Target: $${goalInfo.target}</small>
+        `;
+
+        container.appendChild(goalDiv);
+    });
+}
+
+function downloadGoals() {
+    const container = document.getElementById("goalsContainer");
+    if (!container.innerText || container.innerText.includes("No financial goals")) return alert("No goals data to download.");
+
+    const blob = new Blob([container.innerText], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'financial_goals.txt';
+    a.click();
+}
+
+function downloadTrends() {
+    if (!window.trendsChartInstance) return alert("No trends data available to download.");
+
+    const link = document.createElement('a');
+    link.href = window.trendsChartInstance.toBase64Image();
+    link.download = 'monthly_trends.png';
+    link.click();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f6f8fa;
+    margin: 0;
+    color: #333;
+}
+header {
+    background: linear-gradient(90deg, #00695c, #43a047);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+header h1 { margin: 0; font-size: 24px; }
+
+.container { max-width: 1100px; margin: 25px auto; padding: 0 20px; }
+.upload-box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+input[type="file"] {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    width: 60%;
+}
+button {
+    background: linear-gradient(90deg, #4CAF50, #45A049);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.stats-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    margin: 25px 0;
+}
+.card {
+    flex: 1;
+    min-width: 180px;
+    background: white;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.card h3 { color: #00695c; font-size: 15px; margin: 4px 0; }
+.card p { font-size: 17px; font-weight: bold; }
+
+section {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+h2 { color: #2c3e50; font-size: 18px; margin-top: 0; }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 13px;
+}
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background: #43a047; color: white; }
+
+#searchBox {
+    margin-bottom: 8px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 40%;
+}
+
+.pagination { margin-top: 10px; text-align: center; }
+.pagination button { margin: 0 5px; padding: 5px 10px; background: #00695c; color: white; border-radius: 6px; border: none; }
+.pagination button:disabled { background: #ccc; cursor: not-allowed; }
+
+#chartContainer { text-align: center; }
+canvas { max-width: 300px; height: 300px; margin: auto; }
+
+.toggle-btn {
+    color: #00695c;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    input[type="file"] { width: 100%; }
+    .stats-cards { flex-direction: column; }
+}
